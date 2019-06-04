@@ -1,0 +1,22 @@
+.DrawerToggleBurger{
+    width: 35px;
+    height: 35px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: space-around;
+    cursor: pointer;
+}
+
+.DrawerToggleBurger div{
+    width: 100%;
+    height: 5px;
+    background-color: white;
+}
+
+
+@media (min-width: 500px){
+    .DrawerToggleBurger{
+        display: none;
+    }
+}
