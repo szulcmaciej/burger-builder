@@ -9,7 +9,11 @@ class Layout extends Component{
     }
 
     toggleDrawer = () => {
-        this.setState({displayDrawer: !this.state.displayDrawer});
+        this.setState((prevState) => {
+            return {
+                displayDrawer: !prevState.displayDrawer
+            }
+        });
     }
 
     render(){
