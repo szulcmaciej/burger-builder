@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from './DrawerToggleBurger.module.css';
+import PropTypes from 'prop-types';
 
 const DrawerToggleBurger = (props) => {
     return (
@@ -10,5 +11,9 @@ const DrawerToggleBurger = (props) => {
         </div>
     )
 }
+
+DrawerToggleBurger.propTypes = {
+    click: PropTypes.func.isRequired
+};
 
 export default DrawerToggleBurger
