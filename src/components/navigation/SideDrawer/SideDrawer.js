@@ -4,11 +4,19 @@ import NavigationItems from '../NavigationItems/NavigationItems';
 import classes from './SideDrawer.module.css';
 import Backdrop from '../../UI/Backdrop/Backdrop';
 
-const SideDrawer = () => {
+const SideDrawer = (props) => {
+    const sideDrawerClasses = [classes.SideDrawer];
+    if(props.show){
+        sideDrawerClasses.push(classes.Open);
+    }
+    else{
+        sideDrawerClasses.push(classes.Close);
+    }
+
     return (
         <React.Fragment>
-            <Backdrop show />
-            <div className={classes.SideDrawer}>
+            <Backdrop show={props.show} click={props.hide}/>
+            <div className={sideDrawerClasses.join(' ')}>
                 <div className={classes.Logo}>
                     <Logo />
                 </div>
