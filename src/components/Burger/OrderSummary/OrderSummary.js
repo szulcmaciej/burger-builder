@@ -7,7 +7,7 @@ class OrderSummary extends Component {
     //     console.log('summary update');
     // }
 
-    shouldComponentUpdate(nextProps, nextState){
+    shouldComponentUpdate(nextProps, nextState) {
         return (nextProps.ingredients !== this.props.ingredients);
     }
 
