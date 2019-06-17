@@ -15,28 +15,7 @@ export class OrderList extends Component {
         this.fetchOrders();
     }
 
-    fetchOrders(){
-        // this.setState({
-        //     orders: [
-        //         {
-        //             ingredients: {
-        //                 bacon: 1,
-        //                 cheese: 1,
-        //                 meat: 0
-        //             },
-        //             price: 10
-        //         },
-        //         {
-        //             ingredients: {
-        //                 bacon: 1,
-        //                 cheese: 1,
-        //                 meat: 0
-        //             },
-        //             price: 10
-        //         },
-        //     ]
-        // })
-
+    fetchOrders = () => {
         axios.get('/orders.json')
             .then(response => {
                 const orders = [];
@@ -54,7 +33,11 @@ export class OrderList extends Component {
                     loading: false
                 });
             })
-            .then(error => console.log(error));
+            .then(error => {
+                if (error){
+                    console.log(error);
+                }
+            });
     }
 
     render() {
