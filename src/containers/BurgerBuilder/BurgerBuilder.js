@@ -19,7 +19,6 @@ import * as actionTypes from '../../store/actions'
 
 export class BurgerBuilder extends Component {
     state = {
-        purchasable: false,
         ordering: false,
         loading: false
     }
@@ -28,23 +27,19 @@ export class BurgerBuilder extends Component {
         axios.get('/ingredients.json')
         .then(response => {
             let ingredients = response.data;
-            let purchasable = this.isBurgerPurchasable(ingredients);
-            this.setState({
-                purchasable: purchasable
-            });
             this.props.storeIngredients(ingredients);
         })
         .catch(error => {});
     }
 
-    componentDidUpdate(){
-        let purchasable = this.isBurgerPurchasable(this.props.ingredients);
-        if (this.state.purchasable !== purchasable){
-            this.setState({
-                purchasable: purchasable
-            });
-        }
-    }
+    // componentDidUpdate(){
+    //     let purchasable = this.isBurgerPurchasable(this.props.ingredients);
+    //     if (this.state.purchasable !== purchasable){
+    //         this.setState({
+    //             purchasable: purchasable
+    //         });
+    //     }
+    // }
 
     isBurgerPurchasable = (ingredients) => {
         let totalIngredients = 0;
@@ -68,22 +63,6 @@ export class BurgerBuilder extends Component {
         });
     }
 
-    addIngredientHandler = (type) => {
-        this.props.addIngredient(type);
-        // let purchasable = this.isBurgerPurchasable(this.props.ingredients);
-        // this.setState({
-        //     purchasable: purchasable
-        // });
-    }
-
-    removeIngredientHandler = (type) => {
-        this.props.removeIngredient(type);
-        // let purchasable = this.isBurgerPurchasable(this.props.ingredients);
-        // this.setState({
-        //     purchasable: purchasable
-        // });
-    } 
-
     render() {
         const disabled = {...this.props.ingredients};
         for (let key in disabled){
@@ -98,11 +77,11 @@ export class BurgerBuilder extends Component {
                 <React.Fragment>
                     <Burger ingredients={this.props.ingredients}/>
                     <BuildControls 
-                        ingredientAdded={this.addIngredientHandler}
-                        ingredientRemoved={this.removeIngredientHandler}
+                        ingredientAdded={this.props.addIngredient}
+                        ingredientRemoved={this.props.removeIngredient}
                         disabledInfo={disabled}
                         price={this.props.totalPrice}
-                        purchasable={this.state.purchasable}
+                        purchasable={this.isBurgerPurchasable(this.props.ingredients)}
                         order={this.orderNowHandler}
                     />
                 </React.Fragment>

@@ -32,7 +32,6 @@ const withErrorHandler = (WrappedComponent, axios) => {
             return (
                 <React.Fragment>
                     <Modal show={this.state.error} dismiss={this.errorDismissHandler}>
-                        {/* TODO change to error message */}
                         {this.state.error && this.state.error.message}
                     </Modal>
                     <WrappedComponent {...this.props}/>

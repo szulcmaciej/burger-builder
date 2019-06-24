@@ -4,6 +4,9 @@ import classes from './ContactData.module.css';
 import axios from '../../../axios-order';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import { connect } from 'react-redux'
+
 
 export class ContactData extends Component {
     state = {
@@ -149,14 +152,12 @@ export class ContactData extends Component {
 
         axios.post('/orders.json', order)
             .then(response => {
-                // console.log(response);
-                // this.setState({loading: false, ordering: false});
+                console.log(response);
                 this.setState({ loading: false });
                 this.props.history.push('/orders');
             })
             .catch(error => {
                 console.log(error);
-                // this.setState({loading: false, ordering: false});
                 this.setState({ loading: false });
             });
     }
@@ -186,7 +187,6 @@ export class ContactData extends Component {
                             touched={formElem.config.touched} />
                     ))}
 
-                    {/* <Button type="Success" click={this.orderHandler}>ORDER</Button> */}
                     <Button type="Success" disabled={!this.state.formIsValid}>ORDER</Button>
                 </form>
             </div>
@@ -201,4 +201,9 @@ export class ContactData extends Component {
     }
 }
 
-export default ContactData
+const mapStateToProps = (state) => ({
+    ingredients: state.ingredients,
+    price: state.totalPrice
+})
+
+export default connect(mapStateToProps)(withErrorHandler(ContactData, axios));
