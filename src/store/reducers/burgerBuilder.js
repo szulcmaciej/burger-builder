@@ -1,21 +1,27 @@
-import * as actionTypes from '../actions'
+import * as actionTypes from '../actions/actionTypes';
+import { updateObject } from '../utility';
 
 const initialState = {
-    ingredients: {
-        meat: 0,
-        cheese: 0,
-        bacon: 0,
-        salad: 0
-    },
-    totalPrice: 4
+    ingredients: null,
+    totalPrice: 4,
+    error: false
 }
 
 const INGREDIENT_PRICES = {
+    base: 4,
     salad: 0.5,
     cheese: 0.5,
     meat: 1.5,
     bacon: 0.8
 };
+
+const calculateTotalPrice = (ingredients) => {
+    let price = INGREDIENT_PRICES.base;
+    for (let ingredient in ingredients) {
+        price += ingredients[ingredient] * INGREDIENT_PRICES[ingredient];
+    }
+    return price;
+}
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -46,7 +52,14 @@ const reducer = (state = initialState, action) => {
         case actionTypes.STORE_INGREDIENTS:
             return {
                 ...state,
-                ingredients: action.ingredients
+                ingredients: action.ingredients,
+                totalPrice: calculateTotalPrice(action.ingredients),
+                error: false
+            }
+        case actionTypes.FETCH_INGREDIENTS_FAILED:
+            return {
+                ...state,
+                error: true
             }
         default:
             return state;

@@ -7,7 +7,8 @@ import axios from '../../axios-order';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import { connect } from 'react-redux'
-import * as actionTypes from '../../store/actions'
+import * as actions from '../../store/actions/'
+// import * as actions from '../../store/actions/index' -- the same as above
 
 
 // const INGREDIENT_PRICES = {
@@ -24,12 +25,8 @@ export class BurgerBuilder extends Component {
     }
 
     componentDidMount(){
-        axios.get('/ingredients.json')
-        .then(response => {
-            let ingredients = response.data;
-            this.props.storeIngredients(ingredients);
-        })
-        .catch(error => {});
+        this.props.initIngredients();
+        this.props.purchaseInit();
     }
 
     // componentDidUpdate(){
@@ -71,7 +68,7 @@ export class BurgerBuilder extends Component {
 
         let orderSummary = null;
         
-        let burger = <Spinner />;
+        let burger = this.props.error ? <p>Ingredients can't be loaded</p> : <Spinner />;
         if (this.props.ingredients){
             burger = (
                 <React.Fragment>
@@ -112,15 +109,18 @@ export class BurgerBuilder extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice
+    ingredients: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error
 })
 
 const mapDispatchToProps = dispatch => {
     return {
-        storeIngredients: (ingredients) => dispatch({type: actionTypes.STORE_INGREDIENTS, ingredients: ingredients}),
-        addIngredient: (ingredient) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredient: ingredient}),
-        removeIngredient: (ingredient) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredient: ingredient})
+        // storeIngredients: (ingredients) => dispatch(actions.storeIngredients(ingredients)),
+        addIngredient: (ingredient) => dispatch(actions.addIngredient(ingredient)),
+        removeIngredient: (ingredient) => dispatch(actions.removeIngredient(ingredient)),
+        initIngredients: () => dispatch(actions.initIngredients()),
+        purchaseInit: () => dispatch(actions.purchaseInit())
     }
 }
 
