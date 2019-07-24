@@ -23,46 +23,54 @@ const calculateTotalPrice = (ingredients) => {
     return price;
 }
 
-const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case actionTypes.ADD_INGREDIENT:
-            const newPrice = state.totalPrice + INGREDIENT_PRICES[action.ingredient];
-            return {
-                ...state,
-                ingredients: {
-                    ...state.ingredients,
-                    [action.ingredient]: state.ingredients[action.ingredient] + 1
-                },
-                totalPrice: newPrice
-            }
-        case actionTypes.REMOVE_INGREDIENT:
-            const oldCount = state.ingredients[action.ingredient];
-            if (oldCount > 0){
+const addIngredient = (state, action) => {
+    const newPrice = state.totalPrice + INGREDIENT_PRICES[action.ingredient];
+    const updatedIngredient = { [action.ingredient]: state.ingredients[action.ingredient] + 1 };
+    const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+    const updatedState = updateObject(state, {
+        ingredients: updatedIngredients,
+        totalPrice: newPrice
+    });
+    return updateObject(state, updatedState);
+};
+
+const removeIngredient = (state, action) => {
+    const oldCount = state.ingredients[action.ingredient];
+            if (oldCount > 0) {
                 const newPrice = state.totalPrice - INGREDIENT_PRICES[action.ingredient];
-                return {
-                    ...state,
-                    ingredients: {
-                        ...state.ingredients,
-                        [action.ingredient]: oldCount - 1
-                    },
+                const updatedIngredient = { [action.ingredient]: state.ingredients[action.ingredient] - 1 };
+                const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+                const updatedState = updateObject(state, {
+                    ingredients: updatedIngredients,
                     totalPrice: newPrice
-                };
+                });
+                return updateObject(state, updatedState);
             }
             else return state;
-        case actionTypes.STORE_INGREDIENTS:
-            return {
-                ...state,
-                ingredients: action.ingredients,
-                totalPrice: calculateTotalPrice(action.ingredients),
-                error: false
-            }
-        case actionTypes.FETCH_INGREDIENTS_FAILED:
-            return {
-                ...state,
-                error: true
-            }
-        default:
-            return state;
+}
+
+const storeIngredients = (state, action) => {
+    const updatedSt = {
+        ingredients: action.ingredients,
+        totalPrice: calculateTotalPrice(action.ingredients),
+        error: false
+    }
+    return updateObject(state, updatedSt);
+}
+
+const fetchIngredientsFailed = (state, action) => {
+    return updateObject(state, {
+        error: true
+    });
+}
+
+const reducer = (state = initialState, action) => {
+    switch (action.type) {
+        case actionTypes.ADD_INGREDIENT: return addIngredient(state, action);
+        case actionTypes.REMOVE_INGREDIENT: return removeIngredient(state, action);
+        case actionTypes.STORE_INGREDIENTS: return storeIngredients(state, action);
+        case actionTypes.FETCH_INGREDIENTS_FAILED: return fetchIngredientsFailed(state, action);
+        default: return state;
     }
 }
 
