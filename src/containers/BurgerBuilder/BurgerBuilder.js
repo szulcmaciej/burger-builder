@@ -27,6 +27,7 @@ export class BurgerBuilder extends Component {
     componentDidMount(){
         this.props.initIngredients();
         this.props.purchaseInit();
+        this.props.setAuthRedirectPath('/');
     }
 
     // componentDidUpdate(){
@@ -47,7 +48,14 @@ export class BurgerBuilder extends Component {
     }
 
     orderNowHandler = () => {
-        this.setState({ordering: true});
+        if (this.props.isAuthenticated) {
+            this.setState({ordering: true});
+        }
+        else {
+            this.props.setAuthRedirectPath('/checkout');
+            this.props.history.push('/auth');
+        }
+        
     }
 
     orderCancelHandler = () => {
@@ -80,6 +88,7 @@ export class BurgerBuilder extends Component {
                         price={this.props.totalPrice}
                         purchasable={this.isBurgerPurchasable(this.props.ingredients)}
                         order={this.orderNowHandler}
+                        isAuth={this.props.isAuthenticated}
                     />
                 </React.Fragment>
             );
@@ -111,7 +120,8 @@ export class BurgerBuilder extends Component {
 const mapStateToProps = (state) => ({
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
-    error: state.burgerBuilder.error
+    error: state.burgerBuilder.error,
+    isAuthenticated: state.auth.token !== null
 })
 
 const mapDispatchToProps = dispatch => {
@@ -120,7 +130,8 @@ const mapDispatchToProps = dispatch => {
         addIngredient: (ingredient) => dispatch(actions.addIngredient(ingredient)),
         removeIngredient: (ingredient) => dispatch(actions.removeIngredient(ingredient)),
         initIngredients: () => dispatch(actions.initIngredients()),
-        purchaseInit: () => dispatch(actions.purchaseInit())
+        purchaseInit: () => dispatch(actions.purchaseInit()),
+        setAuthRedirectPath: (path) => dispatch(actions.authSetRedirectPath(path))
     }
 }
 

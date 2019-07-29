@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import classes from './Auth.module.css';
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner'
@@ -128,8 +129,15 @@ export class Auth extends Component {
             errorMessage = 'ERROR: ' + this.props.error.message;
         }
 
+        let authRedirect = null;
+        if (this.props.isAuth) {
+            authRedirect =  <Redirect to={this.props.redirectPath} />;
+        }
+
+
         return (
             <div className={classes.Auth}>
+                {authRedirect}
                 {errorMessage}
                 {form}
                 <Button type="Danger" click={this.switchAuthModeHandler}>Switch to {this.state.isSignup ? 'SIGNIN' : 'SIGNUP'}</Button>
@@ -140,7 +148,9 @@ export class Auth extends Component {
 
 const mapStateToProps = state => ({
     loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    isAuth: state.auth.token !== null,
+    redirectPath: state.auth.authRedirectPath
 });
 
 const mapDispatchToProps = dispatch => ({
