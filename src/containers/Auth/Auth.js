@@ -115,7 +115,6 @@ export class Auth extends Component {
 
         let authRedirect = null;
         if (this.props.isAuth) {
-            console.log('should redirect to ' + this.props.redirectPath);
             authRedirect =  <Redirect to={this.props.redirectPath} />;
         }
 
