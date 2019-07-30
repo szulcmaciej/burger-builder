@@ -8,40 +8,10 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../store/actions'
 
 export class OrderList extends Component {
-    // state = {
-    //     orders: [],
-    //     loading: true
-    // }
 
     componentDidMount(){
-        // this.fetchOrders();
-        this.props.fetchOrders(this.props.token);
+        this.props.fetchOrders(this.props.token, this.props.userId);
     }
-
-    // fetchOrders = () => {
-    //     axios.get('/orders.json')
-    //         .then(response => {
-    //             const orders = [];
-    //             if (response && response.data){
-    //                 for (let key in response.data){
-    //                     orders.push({
-    //                         ...response.data[key],
-    //                         id: key
-    //                     });
-    //                 }
-    //             }
-
-    //             this.setState({
-    //                 orders: orders,
-    //                 loading: false
-    //             });
-    //         })
-    //         .then(error => {
-    //             if (error){
-    //                 console.log(error);
-    //             }
-    //         });
-    // }
 
     render() {
         let orders = null;
@@ -68,11 +38,12 @@ export class OrderList extends Component {
 const mapStateToProps = state => ({
     loading: state.order.loading,
     orders: state.order.orders,
-    token: state.auth.token
+    token: state.auth.token,
+    userId: state.auth.userId
 })
 
 const mapDispatchToProps = dispatch => ({
-    fetchOrders: (token) => dispatch(actions.fetchOrders(token))
+    fetchOrders: (token, userId) => dispatch(actions.fetchOrders(token, userId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(OrderList, axios))
